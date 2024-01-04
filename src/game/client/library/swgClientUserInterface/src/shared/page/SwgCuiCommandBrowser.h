@@ -42,6 +42,7 @@ public:
 	enum TabType
 	{
 		TT_none,
+		TT_droid,
 		TT_combat,
 		TT_social,
 		TT_mood,

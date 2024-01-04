@@ -64,6 +64,7 @@ namespace
 	static const char * s_chatterSpeech = "chatterSpeech";
 
 	uint32 const s_displayGroupAstromech = Crc::normalizeAndCalculate ("astromech");
+	uint32 const s_displayGroupDroid = Crc::normalizeAndCalculate("droid");
 	uint32 const s_displayGroupCostume = Crc::normalizeAndCalculate("costume");
 
 	bool isCommandForPage(SwgCuiCommandBrowser::TabType tabType, uint32 const displayGroupSpace, std::string const & cmd)
@@ -80,10 +81,14 @@ namespace
 		const bool isCombatCommand = CuiCombatManager::isCombatCommand (command);
 		const bool isSpaceCommand = (command.m_displayGroup == displayGroupSpace) ? true : false;
 		const bool isAstromechCommand = (command.m_displayGroup == s_displayGroupAstromech) ? true : false;
+		const bool isDroidCommand = (command.m_displayGroup == s_displayGroupDroid) ? true : false;
 		const bool isCostumeCommand = (command.m_displayGroup == s_displayGroupCostume) ? true : false;
 		const bool isOtherCommand = !isCombatCommand && !isSpaceCommand && !isAstromechCommand && !isCostumeCommand;
 
 		if(tabType == SwgCuiCommandBrowser::TT_combat && isCombatCommand)
+			return true;
+
+		if (tabType == SwgCuiCommandBrowser::TT_droid && isDroidCommand)
 			return true;
 
 		if(tabType == SwgCuiCommandBrowser::TT_space && isSpaceCommand)
@@ -135,6 +140,7 @@ namespace
 	namespace TabNames
 	{			
 		const std::string combat = "@ui_command:command_tab_combat";
+		const std::string droid = "@ui_command:command_tab_droid";
 		const std::string social = "@ui_command:command_tab_social";
 		const std::string mood   = "@ui_command:command_tab_mood";
 		const std::string space  = "@ui_command:command_tab_space";
@@ -354,6 +360,8 @@ void SwgCuiCommandBrowser::OnTabbedPaneChanged (UIWidget * context)
 		
 		if (!_stricmp (tabname.c_str (), TabNames::combat.c_str()))
 			m_tabType = TT_combat;
+		else if (!_stricmp(tabname.c_str(), TabNames::droid.c_str()))
+			m_tabType = TT_droid;
 		else if (!_stricmp (tabname.c_str (), TabNames::social.c_str()))
 			m_tabType = TT_social;
 		else if (!_stricmp (tabname.c_str (), TabNames::mood.c_str()))
@@ -597,7 +605,7 @@ void SwgCuiCommandBrowser::reset  ()
 	
 	CuiDragInfo dragInfo;
 	
-	if (m_tabType == TT_combat || m_tabType == TT_space || m_tabType == TT_other || m_tabType == TT_astromech || m_tabType == TT_costume)
+	if (m_tabType == TT_combat || m_tabType == TT_droid || m_tabType == TT_space || m_tabType == TT_other || m_tabType == TT_astromech || m_tabType == TT_costume)
 	{
 		std::map<std::string, int> sv = player->getCommands ();
 
